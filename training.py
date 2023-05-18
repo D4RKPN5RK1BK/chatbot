@@ -5,12 +5,9 @@ import json
 import os
 import pickle
 import random
-
 import nltk
 import numpy as np
 from pymorphy3 import MorphAnalyzer
-
-# pip install transformers
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import SGD

@@ -2,7 +2,6 @@ import json
 import os
 import pickle
 import random
-
 import nltk
 import numpy as np
 from pymorphy3 import MorphAnalyzer
@@ -14,7 +13,6 @@ intents = json.loads(open(intentsPath, encoding="utf-8").read())
 
 words = pickle.load(open("/Temp/words.pkl", "rb"))
 tags = pickle.load(open("/Temp/tags.pkl", "rb"))
-
 model = load_model("/Temp/chatbot_model.h5")
 
 
@@ -37,12 +35,12 @@ def bag_of_words(sentence=''):
 
 
 def predict(sentence=''):
+    error_trash_hold = 0.25
     bag = bag_of_words(sentence)
     prediction = model.predict(np.array([bag]))[0]
-    ERROR_TRESHHOLD = 0.25
-    result = [[i, r] for i, r in enumerate(prediction) if r > ERROR_TRESHHOLD]
+    result = [[i, r] for i, r in enumerate(prediction) if r > error_trash_hold]
     result.sort(key=lambda x: x[1], reverse=True)
-    result_list = [{"intent": tags[r[0]], "prediction": str(r[1])} for r in result]
+    result_list = [{"tag": tags[r[0]], "prediction": str(r[1])} for r in result]
     return result_list
 
 
@@ -56,7 +54,7 @@ def response_to_message(message):
     predicted_sentence = predict(message)
 
     if any(predicted_sentence):
-        predicted_tag = predicted_sentence[0]['intent']
+        predicted_tag = predicted_sentence[0]['tag']
         return get_responce_by_tag(predicted_tag)
 
     return get_responce_by_tag('unknown')
